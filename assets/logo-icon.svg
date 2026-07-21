@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Icon-only steering-wheel mark. No embedded wordmark — at header/footer
+       sizes (~34-40px) small inline text became an illegible smear, so the
+       mark now carries the brand alone; "Payne Detailing Group" is set as
+       real HTML text next to it wherever this icon is used. -->
+  <circle cx="100" cy="100" r="94" stroke="#18140f" stroke-width="3"/>
+
+  <path d="M40 82 C 55 40, 145 40, 160 82" stroke="#18140f" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <path d="M43 84 C 35 100, 42 118, 62 100 C 74 89, 72 74, 60 71 C 51 69, 46 75, 43 84 Z"
+        stroke="#18140f" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+  <path d="M157 84 C 165 100, 158 118, 138 100 C 126 89, 128 74, 140 71 C 149 69, 154 75, 157 84 Z"
+        stroke="#18140f" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+
+  <path d="M40 118 C 55 160, 145 160, 160 118" stroke="#18140f" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <path d="M60 129 C 46 132, 38 142, 44 156 C 48 166, 58 168, 63 158 C 67 148, 66 136, 60 129 Z"
+        stroke="#18140f" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+  <path d="M140 129 C 154 132, 162 142, 156 156 C 152 166, 142 168, 137 158 C 133 148, 134 136, 140 129 Z"
+        stroke="#18140f" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+  <line x1="90" y1="152" x2="90" y2="170" stroke="#18140f" stroke-width="3" stroke-linecap="round"/>
+  <line x1="110" y1="152" x2="110" y2="170" stroke="#18140f" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- small centered hub dot for balance now that the wordmark is gone -->
+  <circle cx="100" cy="100" r="4" fill="#18140f"/>
+</svg>

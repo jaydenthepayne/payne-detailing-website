@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payne Detailing Group | Exotic &amp; Luxury Automotive Detailing — Rochester, NY</title>
+<meta name="description" content="Payne Detailing Group provides meticulous, by-appointment detailing for exotic and luxury vehicles in the greater Rochester, NY area.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+
+<header id="siteHeader">
+  <a href="index.html" class="logo-mark">
+    <div class="logo">Payne <span>Detailing</span> Group</div>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="nav-cta">
+    <a href="#booking" class="btn"><span>Book Now</span></a>
+  </div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="services.html">Services</a>
+  <a href="products.html">Products</a>
+  <a href="events.html">Events</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- GARAGE DOOR ENTRANCE — click-to-enter, your real logo centered on the door -->
+<div id="garageEnter" class="garage-enter">
+  <div class="garage-door" id="garageDoor">
+    <div class="shop-light" aria-hidden="true">
+      <svg viewBox="0 0 300 150" width="260" height="130">
+        <defs>
+          <linearGradient id="shopLightHousing" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7a7a7a"/>
+            <stop offset="12%" stop-color="#c9c9c9"/>
+            <stop offset="50%" stop-color="#8f8f8f"/>
+            <stop offset="88%" stop-color="#5a5a5a"/>
+            <stop offset="100%" stop-color="#3a3a3a"/>
+          </linearGradient>
+          <linearGradient id="shopLightTube" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#fff9e0"/>
+            <stop offset="50%" stop-color="#fffef6"/>
+            <stop offset="100%" stop-color="#fff9e0"/>
+          </linearGradient>
+          <filter id="shopLightGlow" x="-60%" y="-200%" width="220%" height="500%">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- suspension cables -->
+        <line x1="76" y1="0" x2="76" y2="34" stroke="#3a3a3a" stroke-width="1.5"/>
+        <line x1="224" y1="0" x2="224" y2="34" stroke="#3a3a3a" stroke-width="1.5"/>
+        <!-- reflector housing -->
+        <rect x="46" y="34" width="208" height="40" rx="5" fill="url(#shopLightHousing)" stroke="#2a2a2a" stroke-width="1"/>
+        <rect x="46" y="34" width="208" height="7" rx="3" fill="#d8d8d8" opacity="0.5"/>
+        <!-- recessed reflector well -->
+        <rect x="54" y="42" width="192" height="24" rx="3" fill="#1c1c1c"/>
+        <!-- fluorescent tubes (flicker target) -->
+        <g class="shop-light-tubes">
+          <rect x="60" y="47" width="88" height="7" rx="3.5" fill="url(#shopLightTube)" filter="url(#shopLightGlow)"/>
+          <rect x="152" y="47" width="88" height="7" rx="3.5" fill="url(#shopLightTube)" filter="url(#shopLightGlow)"/>
+        </g>
+        <!-- junction box + cord -->
+        <rect x="205" y="18" width="20" height="16" rx="2" fill="#4a4a4a" stroke="#2a2a2a" stroke-width="1"/>
+        <path d="M 223 20 Q 240 10 236 0" fill="none" stroke="#2a2a2a" stroke-width="2"/>
+        <!-- pull chain -->
+        <line x1="214" y1="34" x2="217" y2="66" stroke="#8a8a8a" stroke-width="1.2"/>
+        <circle cx="217" cy="69" r="3" fill="#9a9a9a" stroke="#5a5a5a" stroke-width="0.5"/>
+      </svg>
+    </div>
+    <div class="garage-logo">
+      <img src="assets/logo-mark-white.png" alt="Payne Detailing Group">
+    </div>
+    <button id="garageBtn" class="garage-btn"><span>Enter</span></button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Welcome to Payne Detailing Group</p>
+    <h1 style="margin-top:22px;">Explore Our Work</h1>
+    <p>Precision care for extraordinary automobiles. Scroll down to see featured vehicles and services.</p>
+  </div>
+</section>
+
+<!-- PANORAMA 1 -->
+<section class="panorama">
+  <video class="layer pano-video" src="assets/video/rs5_01.mp4" muted loop playsinline preload="metadata"></video>
+  <div class="layer pano-overlay"></div>
+  <div class="panorama-caption">
+    <span class="eyebrow">The Standard</span>
+    <h2>Detailing, Treated as Craft — Not a Commodity</h2>
+    <p>Every vehicle that comes through Payne Detailing Group is assessed, planned, and finished by hand. No shared bays, no rushed turnarounds — just uncompromising attention paid to cars that deserve it.</p>
+  </div>
+</section>
+
+<!-- INTRO STATS -->
+<section class="intro tight">
+  <div class="wrap">
+    <div class="intro-stats">
+      <div class="stat reveal"><b>Exotic&nbsp;&amp;&nbsp;Luxury</b><span>Vehicle Focus</span></div>
+      <div class="stat reveal"><b>Mobile&nbsp;Service</b><span>We Come to You</span></div>
+      <div class="stat reveal"><b>Koch&nbsp;Chemie·P&amp;S</b><span>Professional Chemicals</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES (bento teaser) -->
+<section id="services-teaser">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Services</p>
+      <h2>Signature Detailing Packages</h2>
+      <p>A preview of what we offer — head to the full Services page for the complete menu and pricing.</p>
+    </div>
+    <div class="bento">
+      <div class="bento-card wide glass reveal">
+        <div class="bento-num">01</div>
+        <h3>Essential Detail</h3>
+        <p>Full interior cleaning, exterior hand wash, wheels &amp; tires, windows, tire dressing.</p>
+        <div class="bento-price">Starting at $199</div>
+      </div>
+      <div class="bento-card wide glass reveal" style="border-color:var(--gold);">
+        <div class="bento-num">02 &nbsp;·&nbsp; <span style="color:var(--gold-bright);">Most Popular</span></div>
+        <h3>Premium Detail</h3>
+        <p>Steam cleaning, carpet &amp; seat shampoo, iron decontamination, paint sealant.</p>
+        <div class="bento-price">Starting at $349</div>
+      </div>
+      <div class="bento-card glass reveal">
+        <div class="bento-num">03</div>
+        <h3>Signature Detail</h3>
+        <p>Clay bar, paint enhancement polish, swirl reduction, extended protection.</p>
+        <div class="bento-price">Starting at $599</div>
+      </div>
+      <div class="bento-card glass reveal">
+        <div class="bento-num">04</div>
+        <h3>Interior Detail</h3>
+        <p>Deep clean, sanitize, and refresh — vacuum, steam, shampoo, trim.</p>
+        <div class="bento-price">Starting at $249</div>
+      </div>
+      <div class="bento-card glass reveal">
+        <div class="bento-num">05</div>
+        <h3>Exterior Detail</h3>
+        <p>Hand wash, wheels &amp; tires, iron decontamination, sealant protection.</p>
+        <div class="bento-price">Starting at $179</div>
+      </div>
+      <div class="bento-card glass reveal">
+        <div class="bento-num">06</div>
+        <h3>Add-Ons</h3>
+        <p>Engine bay, pet hair removal, headlight restoration, leather treatment.</p>
+        <div class="bento-price">From $50</div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:60px;" class="reveal">
+      <a href="services.html" class="btn"><span>View Full Menu &amp; Pricing</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- EMERGENCY -->
+<section class="emergency">
+  <div class="wrap reveal">
+    <span class="badge">Coming Soon · By Invitation</span>
+    <h2>The Emergency Detail</h2>
+    <p>For owners of exceptionally rare and high-value vehicles, we're developing an on-demand, white-glove detailing service — the same standard of urgency and discretion you'd expect from a private jet detailer, brought to your driveway.</p>
+    <div style="margin-top:34px;"><a href="contact.html" class="btn"><span>Request Early Access</span></a></div>
+  </div>
+</section>
+
+<!-- PANORAMA 2 -->
+<section class="panorama">
+  <video class="layer pano-video" src="assets/video/mercedes_560sl_01.mp4" muted loop playsinline preload="metadata"></video>
+  <div class="layer pano-overlay"></div>
+  <div class="panorama-caption">
+    <span class="eyebrow">What We Use</span>
+    <h2>Only Industry-Standard Chemicals</h2>
+    <p>Koch-Chemie, P&amp;S, and other professional-grade product lines — matched to your vehicle's specific paint, leather, and trim.</p>
+    <div style="margin-top:30px;"><a href="products.html" class="btn"><span>See What We Use</span></a></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Our Process</p>
+      <h2>How We Work</h2>
+    </div>
+    <div class="proc-grid">
+      <div class="proc-step reveal">
+        <div class="n">01</div>
+        <h3>Consultation</h3>
+        <p>We assess your vehicle's make, condition, and your goals before any work begins.</p>
+      </div>
+      <div class="proc-step reveal">
+        <div class="n">02</div>
+        <h3>Preparation</h3>
+        <p>Professional-grade chemicals are matched to your paint, leather, and trim.</p>
+      </div>
+      <div class="proc-step reveal">
+        <div class="n">03</div>
+        <h3>The Detail</h3>
+        <p>Every stage is done by hand, at a pace that respects the vehicle.</p>
+      </div>
+      <div class="proc-step reveal">
+        <div class="n">04</div>
+        <h3>Final Inspection</h3>
+        <p>A final walkaround with you, panel by panel, before the keys go back in your hand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="booking">
+  <div class="wrap">
+    <div class="booking-grid">
+      <div class="booking-info reveal">
+        <p class="eyebrow">Book Now</p>
+        <h2>Reserve Your Appointment</h2>
+        <p>Pick a time directly on the calendar below — you'll get an instant confirmation. Prefer to talk first? Visit the Contact page or use the chat assistant in the corner.</p>
+      </div>
+      <div class="booking-embed">
+        <div id="cal-inline"></div>
+        <div class="booking-fallback" id="calFallback">
+          <span class="eyebrow">Booking Calendar</span>
+          <p>Connect your Cal.com account to activate live booking here.<br>(See <code>js/main.js</code> comment / ask Claude to wire up your real Cal.com username.)</p>
+          <a href="https://cal.com" target="_blank" rel="noopener" class="btn"><span>Set Up Cal.com</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE VIDEO REEL -->
+<section class="reel" id="reel">
+  <div class="reel-video-wrap">
+    <video class="reel-video" id="reelVideo" src="assets/video/escalade_02_grille.mp4" muted autoplay playsinline preload="metadata"></video>
+  </div>
+  <div class="reel-overlay"></div>
+  <div class="wrap reel-content">
+    <div class="reel-head">
+      <div>
+        <p class="eyebrow">Portfolio</p>
+        <h2 style="margin-top:12px;">Real Work, Not Stock Footage</h2>
+      </div>
+      <div class="reel-caption">
+        <div class="clip-title" id="reelClipTitle">Hero Angle</div>
+        <div class="clip-veh" id="reelClipVeh">Porsche Cayman GT4</div>
+      </div>
+    </div>
+    <div class="reel-controls">
+      <div class="reel-vehicles" id="reelVehicles"></div>
+      <div class="reel-nav">
+        <div class="reel-dots" id="reelDots"></div>
+        <button class="reel-arrow" id="reelPrev" aria-label="Previous angle">&#8592;</button>
+        <button class="reel-arrow" id="reelNext" aria-label="Next angle">&#8594;</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER TEASER -->
+<section class="founder">
+  <div class="wrap">
+    <div class="founder-photo reveal"><img src="assets/jayden-founder.jpg" alt="Jayden Payne, Founder"></div>
+    <div class="founder-text reveal">
+      <p class="eyebrow">The Founder</p>
+      <h2>Built by Someone Who Cares About the Details</h2>
+      <p>Payne Detailing Group was founded by Jayden Payne, an entrepreneur who's been building businesses since the eighth grade. Every appointment is treated with the same standard: full attention, professional-grade products, and genuine respect for the craftsmanship of the vehicles we work on.</p>
+      <div class="signature">— Jayden Payne, Founder</div>
+      <div style="margin-top:30px;"><a href="about.html" class="btn"><span>Read the Full Story</span></a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo" style="display:flex;align-items:center;justify-content:center;gap:12px;">Payne <span>Detailing</span> Group</div>
+    <div class="foot-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="products.html">Products</a>
+  <a href="events.html">Events</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="social-links">
+      <a href="https://www.instagram.com/jaydenthepayne?utm_source=qr" target="_blank" rel="noopener" title="Personal Instagram">jaydenthepayne</a>
+      <a href="https://www.instagram.com/jay.8l?utm_source=qr" target="_blank" rel="noopener" title="Car Account">jay.8l</a>
+      <a href="https://www.instagram.com/payne.detailing.group/" target="_blank" rel="noopener" title="Detailing Account">@payne.detailing.group</a>
+      <a href="https://www.youtube.com/@jaydenthepayne" target="_blank" rel="noopener" title="YouTube">YouTube</a>
+      <a href="https://www.facebook.com/profile.php?id=61591609635353" target="_blank" rel="noopener" title="Facebook">Facebook</a>
+      <a href="https://www.tiktok.com/@payne_detailing_group" target="_blank" rel="noopener" title="TikTok">TikTok</a>
+    </div>
+    <p>&copy; <span id="year"></span> Payne Detailing Group. Rochester, NY. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- CHATBOT -->
+<button id="chatbot-launcher" aria-label="Chat with us">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+<div id="chatbot-panel">
+  <div class="chat-head">
+    <span class="eyebrow">After-Hours Assistant</span>
+    <h4>Ask Payne Detailing</h4>
+    <p>Instant answers · Live team during business hours</p>
+  </div>
+  <div class="chat-body" id="chat-body"></div>
+  <div class="chat-quick" id="chat-quick">
+    <button>Pricing</button>
+    <button>Book an appointment</button>
+    <button>Hours</button>
+    <button>Products used</button>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-input" placeholder="Type a question…">
+    <button id="chat-send">Send</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/three-scene.js"></script>
+<script src="js/chatbot.js?v=4"></script>
+<script src="js/main.js?v=4"></script>
+
+<!--
+  ===========================================================
+  CAL.COM BOOKING EMBED — activate once Jayden has an account
+  ===========================================================
+  1. Create a free account at https://cal.com and set up an
+     event type (e.g. "Detailing Consultation").
+  2. Replace "your-cal-username" below with the real username.
+  3. Delete the #calFallback <div> above once this is live.
+  This is Cal.com's standard embed loader — verify against the
+  live snippet in your Cal.com dashboard (Settings > Embed) in
+  case the loader script has been updated since this was written.
+-->
+<script type="text/javascript">
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal; let ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {}; cal.q = cal.q || [];
+        d.head.appendChild(d.createElement("script")).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); };
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === "string") {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]);
+        } else p(cal, ar);
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+
+  Cal("init", { origin: "https://cal.com" });
+  Cal("inline", {
+    elementOrSelector: "#cal-inline",
+    calLink: "paynedetailinggroup1",
+    layout: "month_view"
+  });
+  Cal("ui", { theme: "dark", styles: { branding: { brandColor: "#c9a86a" } } });
+  document.getElementById('calFallback')?.remove();
+</script>
+
+</body>
+</html>

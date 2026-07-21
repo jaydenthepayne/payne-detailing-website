@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Detail - Payne Detailing Group</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #1a1a1a;
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #1a1a1a;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: #d32f2f;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .vehicle-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .vehicle-option {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .vehicle-option:hover {
+            border-color: #1a1a1a;
+            background: #f9f9f9;
+        }
+
+        .vehicle-option.selected {
+            border-color: #1a1a1a;
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .reset-btn {
+            background: #f0f0f0;
+            color: #1a1a1a;
+        }
+
+        .reset-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .success-message {
+            display: none;
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            display: none;
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #666;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .vehicle-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Book Your Detail</h1>
+        <p class="subtitle">Luxury car detailing by Payne Detailing Group</p>
+
+        <div class="success-message" id="successMessage">
+            ✓ Your booking has been submitted successfully. We'll contact you within 24 hours to confirm.
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="contactForm">
+            <!-- Customer Information -->
+            <div class="form-section">
+                <h3>Your Information</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerName">Name <span class="required">*</span></label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone <span class="required">*</span></label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle Selection -->
+            <div class="form-section">
+                <h3>Your Vehicle <span class="required">*</span></h3>
+                <label>Select or describe your vehicle</label>
+                <input type="text" id="vehicleDescription" name="vehicleDescription" placeholder="e.g., 2023 Mercedes-Benz S-Class" required>
+                <input type="hidden" id="vehicleId" name="vehicleId" value="new">
+            </div>
+
+            <!-- Service Selection -->
+            <div class="form-section">
+                <h3>Service Details</h3>
+                
+                <div class="form-group">
+                    <label for="serviceType">Service Type <span class="required">*</span></label>
+                    <select id="serviceType" name="serviceType" required>
+                        <option value="">Select a service</option>
+                        <option value="Essential Detail">Essential Detail - $199</option>
+                        <option value="Premium Detail">Premium Detail - $349</option>
+                        <option value="Signature Detail">Signature Detail - $599</option>
+                        <option value="Interior Detail">Interior Detail - $249</option>
+                        <option value="Exterior Detail">Exterior Detail - $179</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="condition">Vehicle Condition <span class="required">*</span></label>
+                    <select id="condition" name="condition" required>
+                        <option value="">Select condition</option>
+                        <option value="Light">Light (routine maintenance)</option>
+                        <option value="Moderate">Moderate (minor dirt/swirl marks)</option>
+                        <option value="Heavy">Heavy (deep cleaning needed)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Add-Ons</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="engineBay" name="addOns" value="Engine Bay Detail">
+                            <label for="engineBay">Engine Bay Detail (+$75)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="petHair" name="addOns" value="Pet Hair Removal">
+                            <label for="petHair">Pet Hair Removal (+$50)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="headlight" name="addOns" value="Headlight Restoration">
+                            <label for="headlight">Headlight Restoration (+$100)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="leather" name="addOns" value="Leather Treatment">
+                            <label for="leather">Leather Treatment (+$50)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="jobDate">Preferred Date</label>
+                    <input type="date" id="jobDate" name="jobDate">
+                </div>
+            </div>
+
+            <!-- Additional Message -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="message">Additional Notes</label>
+                    <textarea id="message" name="message" placeholder="Any special requests or concerns about your vehicle?"></textarea>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="loading" id="loading">Submitting your booking...</div>
+            <div class="button-group">
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Booking</button>
+                <button type="reset" class="reset-btn">Clear Form</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const loading = document.getElementById('loading');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+
+            // Gather form data
+            const selectedAddOns = Array.from(document.querySelectorAll('input[name="addOns"]:checked'))
+                .map(cb => cb.value)
+                .join(', ');
+
+            const formData = {
+                customerName: document.getElementById('customerName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value || '',
+                vehicleDescription: document.getElementById('vehicleDescription').value,
+                vehicleId: document.getElementById('vehicleId').value,
+                serviceType: document.getElementById('serviceType').value,
+                condition: document.getElementById('condition').value,
+                addOns: selectedAddOns,
+                jobDate: document.getElementById('jobDate').value,
+                message: document.getElementById('message').value || '',
+            };
+
+            try {
+                // Send to Netlify Function
+                const response = await fetch('/.netlify/functions/excel-sync', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    successMessage.textContent = '✓ ' + result.message;
+                    successMessage.style.display = 'block';
+                    form.reset();
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                errorMessage.textContent = '✗ ' + (error.message || 'Failed to submit booking. Please try again.');
+                errorMessage.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
