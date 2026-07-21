@@ -1,75 +1,35 @@
-// Netlify Function: Write form submissions to Excel via OAuth
-// Uses delegated auth flow so it can access your OneDrive
+// Netlify Function: Write form submissions to Excel using admin's stored refresh token
+// No customer login needed — uses pre-authorized admin token
 
 const axios = require('axios');
 
 const CLIENT_ID = process.env.AZURE_CLIENT_ID;
 const CLIENT_SECRET = process.env.AZURE_CLIENT_SECRET;
 const TENANT_ID = process.env.AZURE_TENANT_ID;
-const REDIRECT_URI = 'https://paynedetailinggroup.com/.netlify/functions/excel-sync-callback';
+const ADMIN_REFRESH_TOKEN = process.env.ADMIN_REFRESH_TOKEN;
 const ONEDRIVE_FILE_PATH = '/Payne Detailing Group - Operations/Payne_Detailing_Business_System_v4.xlsx';
 
-// Store tokens in environment or use a simple file-based store
-// For production, you'd use a database, but we'll use a simple approach
-let storedTokens = {};
+let cachedAccessToken = null;
+let cachedTokenExpiry = null;
 
-// Step 1: Get authorization code from user
-async function getAuthorizationUrl() {
-  const scope = 'Files.ReadWrite offline_access';
-  const authUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?` +
-    `client_id=${CLIENT_ID}&` +
-    `redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
-    `response_type=code&` +
-    `scope=${encodeURIComponent(scope)}&` +
-    `response_mode=query`;
-  
-  return authUrl;
-}
+// Refresh admin's access token using refresh token
+async function getAccessToken() {
+  // Return cached token if still valid
+  if (cachedAccessToken && cachedTokenExpiry && Date.now() < cachedTokenExpiry) {
+    return cachedAccessToken;
+  }
 
-// Step 2: Exchange authorization code for tokens
-async function getTokensFromCode(code) {
+  if (!ADMIN_REFRESH_TOKEN) {
+    throw new Error('Admin refresh token not configured. Visit /admin-authorize first.');
+  }
+
   try {
     const response = await axios.post(
       `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,
       new URLSearchParams({
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
-        code: code,
-        redirect_uri: REDIRECT_URI,
-        grant_type: 'authorization_code',
-        scope: 'Files.ReadWrite offline_access',
-      }).toString(),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    );
-    
-    storedTokens.accessToken = response.data.access_token;
-    storedTokens.refreshToken = response.data.refresh_token;
-    storedTokens.expiresAt = Date.now() + (response.data.expires_in * 1000);
-    
-    return response.data.access_token;
-  } catch (error) {
-    console.error('Token exchange failed:', error.response?.data || error.message);
-    throw new Error('Failed to get access token');
-  }
-}
-
-// Step 3: Refresh token if expired
-async function refreshAccessToken() {
-  if (!storedTokens.refreshToken) {
-    throw new Error('No refresh token available');
-  }
-  
-  try {
-    const response = await axios.post(
-      `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,
-      new URLSearchParams({
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
-        refresh_token: storedTokens.refreshToken,
+        refresh_token: ADMIN_REFRESH_TOKEN,
         grant_type: 'refresh_token',
         scope: 'Files.ReadWrite offline_access',
       }).toString(),
@@ -79,34 +39,21 @@ async function refreshAccessToken() {
         },
       }
     );
-    
-    storedTokens.accessToken = response.data.access_token;
-    storedTokens.expiresAt = Date.now() + (response.data.expires_in * 1000);
-    
-    return response.data.access_token;
+
+    cachedAccessToken = response.data.access_token;
+    cachedTokenExpiry = Date.now() + (response.data.expires_in * 1000);
+
+    return cachedAccessToken;
   } catch (error) {
     console.error('Token refresh failed:', error.response?.data || error.message);
-    throw new Error('Failed to refresh access token');
+    throw new Error('Failed to get access token');
   }
 }
 
-// Step 4: Get valid access token
-async function getValidAccessToken() {
-  if (storedTokens.accessToken && storedTokens.expiresAt && Date.now() < storedTokens.expiresAt) {
-    return storedTokens.accessToken;
-  }
-  
-  if (storedTokens.refreshToken) {
-    return await refreshAccessToken();
-  }
-  
-  throw new Error('No valid token available');
-}
-
-// Step 5: Add job to Excel
+// Add job to Excel
 async function addJobToExcel(jobData, accessToken) {
   try {
-    // Get the file ID for v4.xlsx
+    // Get the file ID
     const fileSearchResponse = await axios.get(
       `https://graph.microsoft.com/v1.0/me/drive/root:${encodeURIComponent(ONEDRIVE_FILE_PATH)}`,
       {
@@ -115,9 +62,9 @@ async function addJobToExcel(jobData, accessToken) {
         },
       }
     );
-    
+
     const fileId = fileSearchResponse.data.id;
-    
+
     // Create a workbook session
     const sessionResponse = await axios.post(
       `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/createSession`,
@@ -129,9 +76,9 @@ async function addJobToExcel(jobData, accessToken) {
         },
       }
     );
-    
+
     const sessionId = sessionResponse.data.id;
-    
+
     // Get the Jobs table
     const tableResponse = await axios.get(
       `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('Jobs')/tables`,
@@ -142,12 +89,12 @@ async function addJobToExcel(jobData, accessToken) {
         },
       }
     );
-    
+
     const jobsTable = tableResponse.data.value.find(t => t.name === 'JobsTable');
     if (!jobsTable) {
       throw new Error('JobsTable not found');
     }
-    
+
     // Add new row
     await axios.post(
       `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/tables('${jobsTable.id}')/rows/add`,
@@ -177,7 +124,7 @@ async function addJobToExcel(jobData, accessToken) {
         },
       }
     );
-    
+
     // Close session
     await axios.post(
       `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/closeSession`,
@@ -189,7 +136,7 @@ async function addJobToExcel(jobData, accessToken) {
         },
       }
     );
-    
+
     return { success: true };
   } catch (error) {
     console.error('Excel write failed:', error.response?.data || error.message);
@@ -199,43 +146,16 @@ async function addJobToExcel(jobData, accessToken) {
 
 // Main handler
 exports.handler = async (event) => {
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method not allowed' }),
+    };
+  }
+
   try {
-    // Handle callback from Microsoft login
-    if (event.path.includes('excel-sync-callback')) {
-      const code = event.queryStringParameters?.code;
-      const error = event.queryStringParameters?.error;
-      
-      if (error) {
-        return {
-          statusCode: 400,
-          body: `Authorization error: ${error}`,
-        };
-      }
-      
-      if (code) {
-        await getTokensFromCode(code);
-        return {
-          statusCode: 200,
-          body: 'Authorization successful! You can close this window and submit the form again.',
-        };
-      }
-      
-      return {
-        statusCode: 400,
-        body: 'Missing authorization code',
-      };
-    }
-    
-    // Handle form submission
-    if (event.httpMethod !== 'POST') {
-      return {
-        statusCode: 405,
-        body: JSON.stringify({ error: 'Method not allowed' }),
-      };
-    }
-    
     const formData = JSON.parse(event.body);
-    
+
     // Validate required fields
     const required = ['customerName', 'email', 'phone', 'vehicleDescription', 'serviceType', 'condition'];
     for (const field of required) {
@@ -246,27 +166,13 @@ exports.handler = async (event) => {
         };
       }
     }
-    
-    // Get valid access token
-    let accessToken;
-    try {
-      accessToken = await getValidAccessToken();
-    } catch (error) {
-      // No token, need to authorize
-      const authUrl = await getAuthorizationUrl();
-      return {
-        statusCode: 401,
-        body: JSON.stringify({
-          error: 'Authorization required',
-          authUrl: authUrl,
-          message: 'Please authorize access to your OneDrive and try again',
-        }),
-      };
-    }
-    
+
+    // Get access token
+    const accessToken = await getAccessToken();
+
     // Add job to Excel
     await addJobToExcel(formData, accessToken);
-    
+
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -276,11 +182,20 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error('Function error:', error.message);
+
+    if (error.message.includes('not configured')) {
+      return {
+        statusCode: 503,
+        body: JSON.stringify({
+          error: 'Booking system not yet configured. Please contact the site administrator.',
+        }),
+      };
+    }
+
     return {
       statusCode: 500,
       body: JSON.stringify({
         error: 'Failed to process booking. Please try again.',
-        details: error.message,
       }),
     };
   }

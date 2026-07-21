@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Authorization - Payne Detailing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status.success {
+            display: block;
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .status.error {
+            display: block;
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+
+        .status.info {
+            display: block;
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #1565c0;
+        }
+
+        button {
+            background: #1a1a1a;
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .info-box {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 30px;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .info-box h3 {
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-box ol {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Authorization</h1>
+        <p class="subtitle">One-time setup to connect your OneDrive for booking submissions</p>
+
+        <div id="successStatus" class="status success">
+            ✓ Authorization successful! Your bookings will now sync automatically to Excel.
+        </div>
+
+        <div id="errorStatus" class="status error"></div>
+
+        <div id="infoStatus" class="status info" style="display: none;">
+            Redirecting to Microsoft login... Please sign in with your Microsoft 365 account.
+        </div>
+
+        <button id="authBtn" onclick="authorize()">Authorize with Microsoft</button>
+
+        <div class="info-box">
+            <h3>What this does:</h3>
+            <ol>
+                <li>Click the button above to sign in with your Microsoft account</li>
+                <li>Authorize access to your OneDrive</li>
+                <li>You'll be redirected back here when done</li>
+                <li>Your booking form will then automatically save submissions to your Excel file</li>
+                <li>Customers won't need to sign in or authorize anything</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Check if we're coming back from authorization
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+
+        if (error) {
+            showError(`Authorization failed: ${error}`);
+        } else if (code) {
+            handleAuthorizationCode(code);
+        } else {
+            // Check if already authorized
+            checkAuthorizationStatus();
+        }
+
+        async function authorize() {
+            document.getElementById('infoStatus').style.display = 'block';
+            
+            try {
+                const response = await fetch('/.netlify/functions/admin-get-auth-url', {
+                    method: 'GET',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to get authorization URL');
+                }
+
+                const data = await response.json();
+                window.location.href = data.authUrl;
+            } catch (error) {
+                showError('Failed to start authorization: ' + error.message);
+                document.getElementById('infoStatus').style.display = 'none';
+            }
+        }
+
+        async function handleAuthorizationCode(code) {
+            try {
+                const response = await fetch('/.netlify/functions/admin-handle-auth-callback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('successStatus').style.display = 'block';
+                    document.getElementById('authBtn').disabled = true;
+                    // Clean up URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else {
+                    showError(data.error || 'Authorization failed');
+                }
+            } catch (error) {
+                showError('Failed to complete authorization: ' + error.message);
+            }
+        }
+
+        async function checkAuthorizationStatus() {
+            try {
+                const response = await fetch('/.netlify/functions/admin-check-auth', {
+                    method: 'GET',
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.authorized) {
+                        document.getElementById('successStatus').style.display = 'block';
+                        document.getElementById('authBtn').disabled = true;
+                    }
+                }
+            } catch (error) {
+                console.log('Auth check failed:', error.message);
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorStatus');
+            errorDiv.textContent = '✗ ' + message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

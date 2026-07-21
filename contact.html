@@ -199,22 +199,6 @@
             margin-bottom: 20px;
         }
 
-        .auth-message {
-            display: none;
-            background: #e3f2fd;
-            border: 1px solid #2196f3;
-            color: #1565c0;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .auth-message a {
-            color: #1565c0;
-            font-weight: 600;
-            text-decoration: underline;
-        }
-
         .loading {
             display: none;
             text-align: center;
@@ -256,15 +240,11 @@
 
         <div class="error-message" id="errorMessage"></div>
 
-        <div class="auth-message" id="authMessage">
-            We need to authorize access to complete your booking. <a id="authLink" href="#" target="_blank">Click here to authorize</a>, then come back and submit the form again.
-        </div>
-
         <form id="contactForm">
             <!-- Customer Information -->
             <div class="form-section">
                 <h3>Your Information</h3>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="customerName">Name <span class="required">*</span></label>
@@ -291,14 +271,14 @@
             <!-- Vehicle Selection -->
             <div class="form-section">
                 <h3>Your Vehicle <span class="required">*</span></h3>
-                <label>Select or describe your vehicle</label>
+                <label>Describe your vehicle</label>
                 <input type="text" id="vehicleDescription" name="vehicleDescription" placeholder="e.g., 2023 Mercedes-Benz S-Class" required>
             </div>
 
             <!-- Service Selection -->
             <div class="form-section">
                 <h3>Service Details</h3>
-                
+
                 <div class="form-group">
                     <label for="serviceType">Service Type <span class="required">*</span></label>
                     <select id="serviceType" name="serviceType" required>
@@ -370,8 +350,6 @@
         const form = document.getElementById('contactForm');
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
-        const authMessage = document.getElementById('authMessage');
-        const authLink = document.getElementById('authLink');
         const loading = document.getElementById('loading');
         const submitBtn = document.getElementById('submitBtn');
 
@@ -381,7 +359,6 @@
             // Hide previous messages
             successMessage.style.display = 'none';
             errorMessage.style.display = 'none';
-            authMessage.style.display = 'none';
             loading.style.display = 'block';
             submitBtn.disabled = true;
 
@@ -417,10 +394,6 @@
                     successMessage.textContent = '✓ ' + result.message;
                     successMessage.style.display = 'block';
                     form.reset();
-                } else if (response.status === 401 && result.authUrl) {
-                    // Need authorization
-                    authLink.href = result.authUrl;
-                    authMessage.style.display = 'block';
                 } else {
                     throw new Error(result.error || 'Failed to submit booking');
                 }
