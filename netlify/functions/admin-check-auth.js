@@ -3,37 +3,16 @@ const admin = require('firebase-admin');
 const fs = require('fs');
 const path = require('path');
 
-// Load Firebase config from file
-// In Netlify, __dirname = /var/task/netlify/functions/admin-check-auth
-// Project root is /var/task/
+// Load Firebase config from file in the same directory as this function
 let FIREBASE_CONFIG = {};
 try {
-  // Try multiple possible paths
-  const possiblePaths = [
-    path.join(__dirname, '../../../firebase-config.json'),  // From netlify/functions/
-    path.join(__dirname, '../../firebase-config.json'),      // Fallback
-    '/var/task/firebase-config.json',                        // Absolute path for Netlify
-  ];
-
-  let configFile = null;
-  for (const configPath of possiblePaths) {
-    try {
-      configFile = fs.readFileSync(configPath, 'utf8');
-      console.log('Loaded Firebase config from:', configPath);
-      break;
-    } catch (e) {
-      console.log('Tried path, not found:', configPath);
-    }
-  }
-
-  if (!configFile) {
-    throw new Error('Firebase config not found in any expected location');
-  }
-
+  const configPath = path.join(__dirname, 'firebase-config.json');
+  const configFile = fs.readFileSync(configPath, 'utf8');
   FIREBASE_CONFIG = JSON.parse(configFile);
+  console.log('✓ Loaded Firebase config from:', configPath);
 } catch (error) {
-  console.error('Failed to load firebase-config.json:', error.message);
-  throw new Error('Firebase configuration file not found. Ensure firebase-config.json exists in project root.');
+  console.error('✗ Failed to load firebase-config.json:', error.message);
+  throw new Error('Firebase configuration file not found. Ensure firebase-config.json exists in netlify/functions directory.');
 }
 
 if (!admin.apps.length) {
