@@ -1,4 +1,4 @@
-// Netlify Function: Generate authorization URL for admin
+// Netlify Function: Generate authorization URL for admin (Firebase version)
 const CLIENT_ID = process.env.AZURE_CLIENT_ID;
 const TENANT_ID = process.env.AZURE_TENANT_ID;
 const ADMIN_REDIRECT_URI = 'https://paynedetailinggroup.com/admin-authorize';

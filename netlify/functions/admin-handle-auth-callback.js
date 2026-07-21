@@ -1,10 +1,22 @@
-// Netlify Function: Handle OAuth callback and return refresh token for manual storage
+// Netlify Function: Handle OAuth callback and store refresh token in Firebase
 const axios = require('axios');
+const admin = require('firebase-admin');
 
 const CLIENT_ID = process.env.AZURE_CLIENT_ID;
 const CLIENT_SECRET = process.env.AZURE_CLIENT_SECRET;
 const TENANT_ID = process.env.AZURE_TENANT_ID;
 const ADMIN_REDIRECT_URI = 'https://paynedetailinggroup.com/admin-authorize';
+const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG || '{}');
+
+// Initialize Firebase Admin SDK
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(FIREBASE_CONFIG),
+    projectId: FIREBASE_CONFIG.project_id,
+  });
+}
+
+const db = admin.firestore();
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -37,14 +49,22 @@ exports.handler = async (event) => {
     );
 
     const refreshToken = response.data.refresh_token;
+    const accessToken = response.data.access_token;
+    const expiresIn = response.data.expires_in;
 
-    // Return refresh token to be stored by user in Netlify environment variables
+    // Store tokens in Firestore
+    await db.collection('admin').doc('tokens').set({
+      refreshToken: refreshToken,
+      accessToken: accessToken,
+      expiresAt: Date.now() + (expiresIn * 1000),
+      updatedAt: new Date(),
+    });
+
     return {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
-        refreshToken: refreshToken,
-        message: 'Copy the refreshToken value and add it to Netlify environment variables as ADMIN_REFRESH_TOKEN',
+        message: 'Authorization successful! Your refresh token has been securely stored.',
       }),
     };
   } catch (error) {

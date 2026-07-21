@@ -1,35 +1,54 @@
-// Netlify Function: Write form submissions to Excel using admin's stored refresh token
-// No customer login needed — uses pre-authorized admin token
-
+// Netlify Function: Write form submissions to Excel using Firebase-stored refresh token
 const axios = require('axios');
+const admin = require('firebase-admin');
 
 const CLIENT_ID = process.env.AZURE_CLIENT_ID;
 const CLIENT_SECRET = process.env.AZURE_CLIENT_SECRET;
 const TENANT_ID = process.env.AZURE_TENANT_ID;
-const ADMIN_REFRESH_TOKEN = process.env.ADMIN_REFRESH_TOKEN;
+const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG || '{}');
 const ONEDRIVE_FILE_PATH = '/Payne Detailing Group - Operations/Payne_Detailing_Business_System_v4.xlsx';
 
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(FIREBASE_CONFIG),
+    projectId: FIREBASE_CONFIG.project_id,
+  });
+}
+
+const db = admin.firestore();
 let cachedAccessToken = null;
 let cachedTokenExpiry = null;
 
-// Refresh admin's access token using refresh token
+// Get refresh token from Firebase
+async function getRefreshToken() {
+  try {
+    const doc = await db.collection('admin').doc('tokens').get();
+    if (!doc.exists) {
+      throw new Error('No refresh token stored');
+    }
+    return doc.data().refreshToken;
+  } catch (error) {
+    console.error('Failed to get refresh token:', error.message);
+    throw new Error('Admin authorization not configured. Visit /admin-authorize first.');
+  }
+}
+
+// Refresh access token using refresh token
 async function getAccessToken() {
   // Return cached token if still valid
   if (cachedAccessToken && cachedTokenExpiry && Date.now() < cachedTokenExpiry) {
     return cachedAccessToken;
   }
 
-  if (!ADMIN_REFRESH_TOKEN) {
-    throw new Error('Admin refresh token not configured. Visit /admin-authorize first.');
-  }
-
   try {
+    const refreshToken = await getRefreshToken();
+
     const response = await axios.post(
       `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,
       new URLSearchParams({
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
-        refresh_token: ADMIN_REFRESH_TOKEN,
+        refresh_token: refreshToken,
         grant_type: 'refresh_token',
         scope: 'Files.ReadWrite offline_access',
       }).toString(),
@@ -106,9 +125,9 @@ async function addJobToExcel(jobData, accessToken) {
             jobData.serviceType,
             jobData.condition,
             jobData.addOns || '',
-            null, // BasePrice (formula)
-            null, // ConditionMultiplier (formula)
-            null, // TotalPrice (formula)
+            null,
+            null,
+            null,
             jobData.paymentMethod || '',
             jobData.employee || '',
             jobData.jobDate || new Date().toISOString().split('T')[0],
