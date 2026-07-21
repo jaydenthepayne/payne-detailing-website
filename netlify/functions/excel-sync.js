@@ -1,12 +1,46 @@
 // Netlify Function: Write form submissions to Excel using Firebase-stored refresh token
 const axios = require('axios');
 const admin = require('firebase-admin');
+const fs = require('fs');
+const path = require('path');
 
 const CLIENT_ID = process.env.AZURE_CLIENT_ID;
 const CLIENT_SECRET = process.env.AZURE_CLIENT_SECRET;
 const TENANT_ID = process.env.AZURE_TENANT_ID;
-const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG || '{}');
 const ONEDRIVE_FILE_PATH = '/Payne Detailing Group - Operations/Payne_Detailing_Business_System_v4.xlsx';
+
+// Load Firebase config from file
+// In Netlify, __dirname = /var/task/netlify/functions/excel-sync
+// Project root is /var/task/
+let FIREBASE_CONFIG = {};
+try {
+  // Try multiple possible paths
+  const possiblePaths = [
+    path.join(__dirname, '../../../firebase-config.json'),  // From netlify/functions/
+    path.join(__dirname, '../../firebase-config.json'),      // Fallback
+    '/var/task/firebase-config.json',                        // Absolute path for Netlify
+  ];
+
+  let configFile = null;
+  for (const configPath of possiblePaths) {
+    try {
+      configFile = fs.readFileSync(configPath, 'utf8');
+      console.log('Loaded Firebase config from:', configPath);
+      break;
+    } catch (e) {
+      console.log('Tried path, not found:', configPath);
+    }
+  }
+
+  if (!configFile) {
+    throw new Error('Firebase config not found in any expected location');
+  }
+
+  FIREBASE_CONFIG = JSON.parse(configFile);
+} catch (error) {
+  console.error('Failed to load firebase-config.json:', error.message);
+  throw new Error('Firebase configuration file not found. Ensure firebase-config.json exists in project root.');
+}
 
 if (!admin.apps.length) {
   admin.initializeApp({

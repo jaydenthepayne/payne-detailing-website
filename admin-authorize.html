@@ -48,21 +48,23 @@
             padding: 15px;
             border-radius: 6px;
             margin-bottom: 20px;
-            display: none;
+            display: none !important;
         }
 
         .status.success {
-            display: block;
             background: #e8f5e9;
             border: 1px solid #4caf50;
             color: #2e7d32;
         }
 
         .status.error {
-            display: block;
             background: #ffebee;
             border: 1px solid #f44336;
             color: #c62828;
+        }
+
+        .status.show {
+            display: block !important;
         }
 
         .status.info {
@@ -198,7 +200,10 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    document.getElementById('successStatus').style.display = 'block';
+                    // Hide error message if showing
+                    document.getElementById('errorStatus').classList.remove('show');
+                    // Show success message
+                    document.getElementById('successStatus').classList.add('show');
                     document.getElementById('authBtn').disabled = true;
                     // Clean up URL
                     window.history.replaceState({}, document.title, window.location.pathname);
@@ -219,7 +224,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.authorized) {
-                        document.getElementById('successStatus').style.display = 'block';
+                        document.getElementById('successStatus').classList.add('show');
                         document.getElementById('authBtn').disabled = true;
                     }
                 }
@@ -231,7 +236,10 @@
         function showError(message) {
             const errorDiv = document.getElementById('errorStatus');
             errorDiv.textContent = '✗ ' + message;
-            errorDiv.style.display = 'block';
+            // Hide success message if showing
+            document.getElementById('successStatus').classList.remove('show');
+            // Show error message
+            errorDiv.classList.add('show');
         }
     </script>
 </body>
