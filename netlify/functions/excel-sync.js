@@ -1,24 +1,43 @@
-// Netlify Function: Write form submissions to Excel via Microsoft Graph API
-// This runs serverless when your contact form is submitted
+// Netlify Function: Write form submissions to Excel via OAuth
+// Uses delegated auth flow so it can access your OneDrive
 
 const axios = require('axios');
 
-// Your Azure credentials (these come from environment variables in Netlify)
 const CLIENT_ID = process.env.AZURE_CLIENT_ID;
 const CLIENT_SECRET = process.env.AZURE_CLIENT_SECRET;
 const TENANT_ID = process.env.AZURE_TENANT_ID;
+const REDIRECT_URI = 'https://paynedetailinggroup.com/.netlify/functions/excel-sync-callback';
 const ONEDRIVE_FILE_PATH = '/Payne Detailing Group - Operations/Payne_Detailing_Business_System_v4.xlsx';
 
-// Step 1: Get an access token from Azure
-async function getAccessToken() {
+// Store tokens in environment or use a simple file-based store
+// For production, you'd use a database, but we'll use a simple approach
+let storedTokens = {};
+
+// Step 1: Get authorization code from user
+async function getAuthorizationUrl() {
+  const scope = 'Files.ReadWrite offline_access';
+  const authUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?` +
+    `client_id=${CLIENT_ID}&` +
+    `redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
+    `response_type=code&` +
+    `scope=${encodeURIComponent(scope)}&` +
+    `response_mode=query`;
+  
+  return authUrl;
+}
+
+// Step 2: Exchange authorization code for tokens
+async function getTokensFromCode(code) {
   try {
     const response = await axios.post(
       `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,
       new URLSearchParams({
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
-        scope: 'https://graph.microsoft.com/.default',
-        grant_type: 'client_credentials',
+        code: code,
+        redirect_uri: REDIRECT_URI,
+        grant_type: 'authorization_code',
+        scope: 'Files.ReadWrite offline_access',
       }).toString(),
       {
         headers: {
@@ -26,19 +45,70 @@ async function getAccessToken() {
         },
       }
     );
+    
+    storedTokens.accessToken = response.data.access_token;
+    storedTokens.refreshToken = response.data.refresh_token;
+    storedTokens.expiresAt = Date.now() + (response.data.expires_in * 1000);
+    
     return response.data.access_token;
   } catch (error) {
-    console.error('Token fetch failed:', error.response?.data || error.message);
-    throw new Error('Failed to authenticate with Microsoft Graph');
+    console.error('Token exchange failed:', error.response?.data || error.message);
+    throw new Error('Failed to get access token');
   }
 }
 
-// Step 2: Add a new row to the Jobs sheet in Excel
+// Step 3: Refresh token if expired
+async function refreshAccessToken() {
+  if (!storedTokens.refreshToken) {
+    throw new Error('No refresh token available');
+  }
+  
+  try {
+    const response = await axios.post(
+      `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,
+      new URLSearchParams({
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        refresh_token: storedTokens.refreshToken,
+        grant_type: 'refresh_token',
+        scope: 'Files.ReadWrite offline_access',
+      }).toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+    
+    storedTokens.accessToken = response.data.access_token;
+    storedTokens.expiresAt = Date.now() + (response.data.expires_in * 1000);
+    
+    return response.data.access_token;
+  } catch (error) {
+    console.error('Token refresh failed:', error.response?.data || error.message);
+    throw new Error('Failed to refresh access token');
+  }
+}
+
+// Step 4: Get valid access token
+async function getValidAccessToken() {
+  if (storedTokens.accessToken && storedTokens.expiresAt && Date.now() < storedTokens.expiresAt) {
+    return storedTokens.accessToken;
+  }
+  
+  if (storedTokens.refreshToken) {
+    return await refreshAccessToken();
+  }
+  
+  throw new Error('No valid token available');
+}
+
+// Step 5: Add job to Excel
 async function addJobToExcel(jobData, accessToken) {
   try {
-    // First, get the file ID for v4.xlsx
+    // Get the file ID for v4.xlsx
     const fileSearchResponse = await axios.get(
-      `https://graph.microsoft.com/v1.0/me/drive/root:${ONEDRIVE_FILE_PATH}`,
+      `https://graph.microsoft.com/v1.0/me/drive/root:${encodeURIComponent(ONEDRIVE_FILE_PATH)}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -48,12 +118,10 @@ async function addJobToExcel(jobData, accessToken) {
     
     const fileId = fileSearchResponse.data.id;
     
-    // Now get the workbook session and add data to the Jobs sheet
+    // Create a workbook session
     const sessionResponse = await axios.post(
       `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/createSession`,
-      {
-        persistChanges: true,
-      },
+      { persistChanges: true },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -64,7 +132,7 @@ async function addJobToExcel(jobData, accessToken) {
     
     const sessionId = sessionResponse.data.id;
     
-    // Find the next empty row in the Jobs sheet
+    // Get the Jobs table
     const tableResponse = await axios.get(
       `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/worksheets('Jobs')/tables`,
       {
@@ -77,27 +145,27 @@ async function addJobToExcel(jobData, accessToken) {
     
     const jobsTable = tableResponse.data.value.find(t => t.name === 'JobsTable');
     if (!jobsTable) {
-      throw new Error('JobsTable not found in Jobs sheet');
+      throw new Error('JobsTable not found');
     }
     
-    // Add a new row to the table with the form data
-    const newRow = await axios.post(
+    // Add new row
+    await axios.post(
       `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/tables('${jobsTable.id}')/rows/add`,
       {
         values: [
           [
             jobData.customerName,
-            jobData.vehicleId,
+            jobData.vehicleDescription,
             jobData.serviceType,
             jobData.condition,
-            jobData.addOns,
+            jobData.addOns || '',
             null, // BasePrice (formula)
             null, // ConditionMultiplier (formula)
             null, // TotalPrice (formula)
             jobData.paymentMethod || '',
             jobData.employee || '',
             jobData.jobDate || new Date().toISOString().split('T')[0],
-            'Live', // EntryType
+            'Live',
           ],
         ],
       },
@@ -110,7 +178,7 @@ async function addJobToExcel(jobData, accessToken) {
       }
     );
     
-    // Close the session
+    // Close session
     await axios.post(
       `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/closeSession`,
       { sessionId },
@@ -122,27 +190,54 @@ async function addJobToExcel(jobData, accessToken) {
       }
     );
     
-    return { success: true, message: 'Job added to Excel successfully' };
+    return { success: true };
   } catch (error) {
     console.error('Excel write failed:', error.response?.data || error.message);
-    throw new Error('Failed to write to Excel file');
+    throw new Error('Failed to write to Excel');
   }
 }
 
 // Main handler
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Method not allowed' }),
-    };
-  }
-
   try {
+    // Handle callback from Microsoft login
+    if (event.path.includes('excel-sync-callback')) {
+      const code = event.queryStringParameters?.code;
+      const error = event.queryStringParameters?.error;
+      
+      if (error) {
+        return {
+          statusCode: 400,
+          body: `Authorization error: ${error}`,
+        };
+      }
+      
+      if (code) {
+        await getTokensFromCode(code);
+        return {
+          statusCode: 200,
+          body: 'Authorization successful! You can close this window and submit the form again.',
+        };
+      }
+      
+      return {
+        statusCode: 400,
+        body: 'Missing authorization code',
+      };
+    }
+    
+    // Handle form submission
+    if (event.httpMethod !== 'POST') {
+      return {
+        statusCode: 405,
+        body: JSON.stringify({ error: 'Method not allowed' }),
+      };
+    }
+    
     const formData = JSON.parse(event.body);
-
+    
     // Validate required fields
-    const required = ['customerName', 'email', 'phone', 'vehicleId', 'serviceType', 'condition'];
+    const required = ['customerName', 'email', 'phone', 'vehicleDescription', 'serviceType', 'condition'];
     for (const field of required) {
       if (!formData[field]) {
         return {
@@ -151,26 +246,41 @@ exports.handler = async (event) => {
         };
       }
     }
-
-    // Get access token
-    const accessToken = await getAccessToken();
-
+    
+    // Get valid access token
+    let accessToken;
+    try {
+      accessToken = await getValidAccessToken();
+    } catch (error) {
+      // No token, need to authorize
+      const authUrl = await getAuthorizationUrl();
+      return {
+        statusCode: 401,
+        body: JSON.stringify({
+          error: 'Authorization required',
+          authUrl: authUrl,
+          message: 'Please authorize access to your OneDrive and try again',
+        }),
+      };
+    }
+    
     // Add job to Excel
     await addJobToExcel(formData, accessToken);
-
+    
     return {
       statusCode: 200,
-      body: JSON.stringify({ 
-        success: true, 
-        message: 'Your booking has been submitted and logged in our system' 
+      body: JSON.stringify({
+        success: true,
+        message: 'Your booking has been submitted and logged in our system',
       }),
     };
   } catch (error) {
     console.error('Function error:', error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
-        error: 'Failed to process booking. Please try again or contact us.' 
+      body: JSON.stringify({
+        error: 'Failed to process booking. Please try again.',
+        details: error.message,
       }),
     };
   }
