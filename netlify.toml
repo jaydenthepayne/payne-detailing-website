@@ -5,4 +5,4 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  included_files = ["firebase-config.json"]
+  included_files = ["netlify/functions/firebase-config.json"]
