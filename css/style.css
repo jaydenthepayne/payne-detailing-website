@@ -364,6 +364,15 @@ nav a.active{ color:var(--gold); }
 .bento-card h3{ font-size:25px; margin-top:16px; }
 .bento-card p{ color:var(--muted); font-size:14px; margin-top:14px; }
 .bento-price{ margin-top:20px; font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); }
+/* Cards that are also cal.com booking links (Essential/Premium/Signature on
+   the homepage teaser) — a subtle CTA that brightens on hover so the card
+   reads as clickable without adding a second visible button. */
+.bento-book{ display:block; cursor:pointer; }
+.bento-cta{
+  margin-top:14px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--muted-2); transition:color .35s var(--ease);
+}
+.bento-book:hover .bento-cta{ color:var(--gold-bright); }
 
 /* ---------- EMERGENCY BANNER ---------- */
 /* Kept as a deliberate dark contrast band — a common luxury-site device

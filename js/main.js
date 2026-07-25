@@ -69,18 +69,36 @@ document.addEventListener('DOMContentLoaded', () => {
      Swaps in vertically-shot clips (framed for the car, not cropped from a
      landscape source) on the hero and first panorama band when the viewport
      is phone-width. Checked once at load — orientation flips mid-session are
-     rare enough not to warrant a resize listener here. */
-  document.querySelectorAll('[data-mobile-src]').forEach((vid) => {
+     rare enough not to warrant a resize listener here.
+     On mobile these play as a rotation (data-mobile-playlist, comma-
+     separated) rather than one clip on native <video loop> — a single 4s
+     clip looping forever reads as broken/repetitive on a phone. Desktop is
+     unaffected: a single-item list just plays through its native `loop`
+     attribute exactly as before. */
+  document.querySelectorAll('[data-desktop-src]').forEach((vid) => {
     const desktopSrc = vid.getAttribute('data-desktop-src') || vid.getAttribute('src');
-    const mobileSrc = vid.getAttribute('data-mobile-src');
-    if (window.innerWidth <= 760 && mobileSrc) {
+    const mobilePlaylist = (vid.getAttribute('data-mobile-playlist') || '')
+      .split(',').map((s) => s.trim()).filter(Boolean);
+    const playlist = (window.innerWidth <= 760 && mobilePlaylist.length) ? mobilePlaylist : [desktopSrc];
+    let index = 0;
+
+    function playClip(i) {
+      index = i % playlist.length;
       vid.querySelector('source')?.remove();
-      vid.setAttribute('src', mobileSrc);
-    } else if (window.innerWidth > 760 && desktopSrc) {
-      vid.querySelector('source')?.remove();
-      vid.setAttribute('src', desktopSrc);
+      vid.setAttribute('src', playlist[index]);
+      vid.load();
+      /* Explicit .play() needed here — mobile Safari honors the autoplay
+         attribute on a video's original src at page load, but once a
+         script calls .load() to swap the src, autoplay alone no longer
+         restarts playback, so it sits paused on the first frame. */
+      vid.play().catch(() => {});
     }
-    vid.load();
+
+    if (playlist.length > 1) {
+      vid.loop = false; // native loop would swallow 'ended' and stop rotation from ever advancing
+      vid.addEventListener('ended', () => playClip(index + 1));
+    }
+    playClip(0);
   });
 
   /* ---- footer year ---- */
