@@ -16,8 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const garageEnter = document.getElementById('garageEnter');
   const garageBtn = document.getElementById('garageBtn');
 
+  /* Currently-visible rotating background videos (hero + panorama), as
+     getter functions so this always reaches whichever element is on top
+     after a crossfade swap. Real phones can silently reject the very
+     first .play() call made before any user interaction — even muted +
+     playsinline — leaving the video paused with the browser's own
+     tap-to-play glyph showing over it, with nothing left to tap that
+     retries. The Enter button is a guaranteed user gesture, so retrying
+     .play() here reliably unsticks it. */
+  const activeVideoGetters = [];
+
   function openGarage() {
     garageEnter.classList.add('lifted');
+    activeVideoGetters.forEach((getFront) => getFront().play().catch(() => {}));
     setTimeout(() => {
       garageEnter.classList.add('closed');
     }, 2400); // matches the 2.4s CSS lift transition
@@ -80,25 +91,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobilePlaylist = (vid.getAttribute('data-mobile-playlist') || '')
       .split(',').map((s) => s.trim()).filter(Boolean);
     const playlist = (window.innerWidth <= 760 && mobilePlaylist.length) ? mobilePlaylist : [desktopSrc];
+
+    if (playlist.length <= 1) {
+      vid.play().catch(() => {});
+      return;
+    }
+
+    /* Multi-clip rotation, crossfaded between two stacked <video> elements
+       instead of swapping .src on one — a plain src swap + .load() clears
+       the frame to black for a beat while the new clip's data loads, which
+       reads as a broken flash between clips. The hidden "back" element
+       starts loading the next clip as soon as the current one begins, so
+       by the time it's due it's already buffered and the crossfade is
+       instant. Both elements share the same class list (position/sizing
+       CSS is class-based), so they stack exactly on top of each other. */
+    vid.loop = false;
+    vid.style.transition = 'opacity .5s ease';
+    const buffer = vid.cloneNode(false);
+    buffer.removeAttribute('id');
+    buffer.removeAttribute('autoplay');
+    buffer.style.transition = 'opacity .5s ease';
+    buffer.style.opacity = '0';
+    buffer.preload = 'auto';
+    vid.insertAdjacentElement('afterend', buffer);
+
+    let front = vid;
+    let back = buffer;
     let index = 0;
 
-    function playClip(i) {
-      index = i % playlist.length;
-      vid.querySelector('source')?.remove();
-      vid.setAttribute('src', playlist[index]);
-      vid.load();
-      /* Explicit .play() needed here — mobile Safari honors the autoplay
-         attribute on a video's original src at page load, but once a
-         script calls .load() to swap the src, autoplay alone no longer
-         restarts playback, so it sits paused on the first frame. */
-      vid.play().catch(() => {});
+    function loadInto(el, i) {
+      el.src = playlist[i % playlist.length];
+      el.load();
     }
 
-    if (playlist.length > 1) {
-      vid.loop = false; // native loop would swallow 'ended' and stop rotation from ever advancing
-      vid.addEventListener('ended', () => playClip(index + 1));
+    function armNext() {
+      loadInto(back, index + 1);
     }
-    playClip(0);
+
+    function onEnded() {
+      index = (index + 1) % playlist.length;
+      back.currentTime = 0;
+      back.play().catch(() => {});
+      front.style.opacity = '0';
+      back.style.opacity = '1';
+      [front, back] = [back, front];
+      front.addEventListener('ended', onEnded, { once: true });
+      armNext();
+    }
+
+    loadInto(front, 0);
+    front.style.opacity = '1';
+    front.play().catch(() => {});
+    front.addEventListener('ended', onEnded, { once: true });
+    armNext();
+
+    activeVideoGetters.push(() => front);
   });
 
   /* ---- footer year ---- */
