@@ -1,410 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book a Detail - Payne Detailing Group</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-            width: 100%;
-            padding: 40px;
-        }
-
-        h1 {
-            color: #1a1a1a;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-        }
-
-        .form-section h3 {
-            color: #1a1a1a;
-            font-size: 16px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            color: #1a1a1a;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        label .required {
-            color: #d32f2f;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        input[type="date"]:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #1a1a1a;
-            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 10px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            margin-right: 8px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .checkbox-item label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: normal;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        button {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .submit-btn {
-            background: #1a1a1a;
-            color: white;
-        }
-
-        .submit-btn:hover {
-            background: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .reset-btn {
-            background: #f0f0f0;
-            color: #1a1a1a;
-        }
-
-        .reset-btn:hover {
-            background: #e0e0e0;
-        }
-
-        .success-message {
-            display: none;
-            background: #e8f5e9;
-            border: 1px solid #4caf50;
-            color: #2e7d32;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .error-message {
-            display: none;
-            background: #ffebee;
-            border: 1px solid #f44336;
-            color: #c62828;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            color: #666;
-            margin: 20px 0;
-        }
-
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .checkbox-group {
-                grid-template-columns: 1fr;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .container {
-                padding: 25px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | Payne Detailing Group</title>
+<meta name="description" content="Book your detail on the calendar below, or reach Payne Detailing Group directly by phone or email.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
-    <div class="container">
-        <h1>Book Your Detail</h1>
-        <p class="subtitle">Luxury car detailing by Payne Detailing Group</p>
 
-        <div class="success-message" id="successMessage">
-            ✓ Your booking has been submitted successfully. We'll contact you within 24 hours to confirm.
+<header id="siteHeader">
+  <a href="index.html" class="logo-mark">
+    <div class="logo">Payne <span>Detailing</span> Group</div>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="nav-cta">
+    <a href="contact.html#booking" class="btn"><span>Book Now</span></a>
+  </div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="services.html">Services</a>
+  <a href="products.html">Products</a>
+  <a href="events.html">Events</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">Get In Touch</p>
+    <h1 style="margin-top:16px;">Book Your Detail</h1>
+    <p>Pick a time directly on the calendar below, or reach out to us directly if you'd rather talk first.</p>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="booking">
+  <div class="wrap">
+    <div class="booking-grid">
+      <div class="booking-info reveal">
+        <p class="eyebrow">Book Now</p>
+        <h2>Reserve Your Appointment</h2>
+        <p>Pick a time directly on the calendar below — you'll get an instant confirmation. Prefer to talk first? Use the direct contact info below or the chat assistant in the corner.</p>
+      </div>
+      <div class="booking-embed">
+        <div id="cal-inline"></div>
+        <div class="booking-fallback" id="calFallback">
+          <span class="eyebrow">Booking Calendar</span>
+          <p>Connect your Cal.com account to activate live booking here.<br>(See <code>js/main.js</code> comment / ask Claude to wire up your real Cal.com username.)</p>
+          <a href="https://cal.com" target="_blank" rel="noopener" class="btn"><span>Set Up Cal.com</span></a>
         </div>
-
-        <div class="error-message" id="errorMessage"></div>
-
-        <form id="contactForm">
-            <!-- Customer Information -->
-            <div class="form-section">
-                <h3>Your Information</h3>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="customerName">Name <span class="required">*</span></label>
-                        <input type="text" id="customerName" name="customerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email <span class="required">*</span></label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="phone">Phone <span class="required">*</span></label>
-                        <input type="tel" id="phone" name="phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <input type="text" id="address" name="address">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Vehicle Selection -->
-            <div class="form-section">
-                <h3>Your Vehicle <span class="required">*</span></h3>
-                <label>Describe your vehicle</label>
-                <input type="text" id="vehicleDescription" name="vehicleDescription" placeholder="e.g., 2023 Mercedes-Benz S-Class" required>
-            </div>
-
-            <!-- Service Selection -->
-            <div class="form-section">
-                <h3>Service Details</h3>
-
-                <div class="form-group">
-                    <label for="serviceType">Service Type <span class="required">*</span></label>
-                    <select id="serviceType" name="serviceType" required>
-                        <option value="">Select a service</option>
-                        <option value="Essential Detail">Essential Detail - $199</option>
-                        <option value="Premium Detail">Premium Detail - $349</option>
-                        <option value="Signature Detail">Signature Detail - $599</option>
-                        <option value="Interior Detail">Interior Detail - $249</option>
-                        <option value="Exterior Detail">Exterior Detail - $179</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="condition">Vehicle Condition <span class="required">*</span></label>
-                    <select id="condition" name="condition" required>
-                        <option value="">Select condition</option>
-                        <option value="Light">Light (routine maintenance)</option>
-                        <option value="Moderate">Moderate (minor dirt/swirl marks)</option>
-                        <option value="Heavy">Heavy (deep cleaning needed)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Add-Ons</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="engineBay" name="addOns" value="Engine Bay Detail">
-                            <label for="engineBay">Engine Bay Detail (+$75)</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="petHair" name="addOns" value="Pet Hair Removal">
-                            <label for="petHair">Pet Hair Removal (+$50)</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="headlight" name="addOns" value="Headlight Restoration">
-                            <label for="headlight">Headlight Restoration (+$100)</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="leather" name="addOns" value="Leather Treatment">
-                            <label for="leather">Leather Treatment (+$50)</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="jobDate">Preferred Date</label>
-                    <input type="date" id="jobDate" name="jobDate">
-                </div>
-            </div>
-
-            <!-- Additional Message -->
-            <div class="form-section">
-                <div class="form-group">
-                    <label for="message">Additional Notes</label>
-                    <textarea id="message" name="message" placeholder="Any special requests or concerns about your vehicle?"></textarea>
-                </div>
-            </div>
-
-            <!-- Form Actions -->
-            <div class="loading" id="loading">Submitting your booking...</div>
-            <div class="button-group">
-                <button type="submit" class="submit-btn" id="submitBtn">Submit Booking</button>
-                <button type="reset" class="reset-btn">Clear Form</button>
-            </div>
-        </form>
+      </div>
     </div>
+  </div>
+</section>
 
-    <script>
-        const form = document.getElementById('contactForm');
-        const successMessage = document.getElementById('successMessage');
-        const errorMessage = document.getElementById('errorMessage');
-        const loading = document.getElementById('loading');
-        const submitBtn = document.getElementById('submitBtn');
+<!-- EMERGENCY DETAIL -->
+<section class="emergency-detail" style="background:#f5f5f5; padding:80px 20px;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Need It Fast?</p>
+      <h2>Emergency Detail Service</h2>
+      <p>Need your vehicle detailed urgently? Call us directly for same-day or rush appointments.</p>
+    </div>
+    <div class="emergency-contact reveal" style="max-width:600px; margin:40px auto 0;">
+      <div style="text-align:center; padding:40px; border:2px solid #c9a86a; border-radius:8px;">
+        <p style="font-size:14px; letter-spacing:2px; color:#666; margin-bottom:16px;">CALL FOR IMMEDIATE AVAILABILITY</p>
+        <a href="tel:+15855048629" style="display:inline-block; font-size:48px; font-weight:600; color:#c9a86a; text-decoration:none; margin-bottom:20px; font-family:'Cormorant Garamond';">+1 (585) 504-8629</a>
+        <p style="color:#666; margin-bottom:24px;">Available for rush bookings during business hours. Text us if calling isn't convenient.</p>
+        <a href="sms:+15855048629" class="btn" style="display:inline-block;"><span>Text Us</span></a>
+      </div>
+    </div>
+  </div>
+</section>
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+<!-- DIRECT CONTACT -->
+<section class="contact tight">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Questions First?</p>
+      <h2>Get in Touch</h2>
+      <p>Have questions before booking? Reach out by phone, email, or social media.</p>
+    </div>
+    <div class="contact-info reveal" style="max-width:500px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:40px; text-align:center;">
+        <div class="info-item">
+          <div class="k" style="font-size:12px; letter-spacing:1px; color:#999; margin-bottom:8px;">PHONE</div>
+          <div class="v"><a href="tel:+15855048629" style="font-size:20px; font-weight:600;">+1 (585) 504-8629</a></div>
+        </div>
+        <div class="info-item">
+          <div class="k" style="font-size:12px; letter-spacing:1px; color:#999; margin-bottom:8px;">EMAIL</div>
+          <div class="v"><a href="mailto:jayden.payne@paynedetailinggroup.com" style="font-size:14px;">jayden.payne@paynedetailinggroup.com</a></div>
+        </div>
+      </div>
+      <div class="social-row" style="justify-content:center; margin-top:40px;">
+        <a href="https://www.instagram.com/payne.detailing.group/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.facebook.com/profile.php?id=61591609635353" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.tiktok.com/@payne_detailing_group" target="_blank" rel="noopener">TikTok</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-            // Hide previous messages
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-            loading.style.display = 'block';
-            submitBtn.disabled = true;
+<footer>
+  <div class="wrap">
+    <div class="logo" style="display:flex;align-items:center;justify-content:center;gap:12px;">Payne <span>Detailing</span> Group</div>
+    <div class="foot-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="products.html">Products</a>
+  <a href="events.html">Events</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="social-links">
+      <a href="https://www.instagram.com/jaydenthepayne?utm_source=qr" target="_blank" rel="noopener" title="Personal Instagram">jaydenthepayne</a>
+      <a href="https://www.instagram.com/jay.8l?utm_source=qr" target="_blank" rel="noopener" title="Car Account">jay.8l</a>
+      <a href="https://www.instagram.com/payne.detailing.group/" target="_blank" rel="noopener" title="Detailing Account">@payne.detailing.group</a>
+      <a href="https://www.youtube.com/@jaydenthepayne" target="_blank" rel="noopener" title="YouTube">YouTube</a>
+      <a href="https://www.facebook.com/profile.php?id=61591609635353" target="_blank" rel="noopener" title="Facebook">Facebook</a>
+      <a href="https://www.tiktok.com/@payne_detailing_group" target="_blank" rel="noopener" title="TikTok">TikTok</a>
+    </div>
+    <p>&copy; <span id="year"></span> Payne Detailing Group. Rochester, NY. All rights reserved.</p>
+  </div>
+</footer>
 
-            // Gather form data
-            const selectedAddOns = Array.from(document.querySelectorAll('input[name="addOns"]:checked'))
-                .map(cb => cb.value)
-                .join(', ');
+<button id="chatbot-launcher" aria-label="Chat with us">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+<div id="chatbot-panel">
+  <div class="chat-head">
+    <span class="eyebrow">After-Hours Assistant</span>
+    <h4>Ask Payne Detailing</h4>
+    <p>Instant answers · Live team during business hours</p>
+  </div>
+  <div class="chat-body" id="chat-body"></div>
+  <div class="chat-quick" id="chat-quick">
+    <button>Pricing</button>
+    <button>Book an appointment</button>
+    <button>Hours</button>
+    <button>Products used</button>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-input" placeholder="Type a question…">
+    <button id="chat-send">Send</button>
+  </div>
+</div>
 
-            const formData = {
-                customerName: document.getElementById('customerName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                address: document.getElementById('address').value || '',
-                vehicleDescription: document.getElementById('vehicleDescription').value,
-                serviceType: document.getElementById('serviceType').value,
-                condition: document.getElementById('condition').value,
-                addOns: selectedAddOns,
-                jobDate: document.getElementById('jobDate').value,
-                message: document.getElementById('message').value || '',
-            };
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="js/chatbot.js?v=3"></script>
+<script src="js/main.js?v=3"></script>
 
-            try {
-                // Send to Netlify Function
-                const response = await fetch('/.netlify/functions/excel-sync', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData),
-                });
+<!--
+  ===========================================================
+  CAL.COM BOOKING EMBED — mirrors the working embed on index.html
+  ===========================================================
+  Uses the same calLink as the homepage. If that ever changes,
+  update it in both places (or ask Claude to do it).
+-->
+<script type="text/javascript">
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal; let ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {}; cal.q = cal.q || [];
+        d.head.appendChild(d.createElement("script")).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); };
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === "string") {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]);
+        } else p(cal, ar);
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
 
-                const result = await response.json();
+  Cal("init", { origin: "https://cal.com" });
+  Cal("inline", {
+    elementOrSelector: "#cal-inline",
+    calLink: "paynedetailinggroup1",
+    layout: "month_view"
+  });
+  Cal("ui", { theme: "light", styles: { branding: { brandColor: "#c9a86a" } } });
+  document.getElementById('calFallback')?.remove();
+</script>
 
-                if (response.ok) {
-                    successMessage.textContent = '✓ ' + result.message;
-                    successMessage.style.display = 'block';
-                    form.reset();
-                } else {
-                    throw new Error(result.error || 'Failed to submit booking');
-                }
-            } catch (error) {
-                errorMessage.textContent = '✗ ' + (error.message || 'Failed to submit booking. Please try again.');
-                errorMessage.style.display = 'block';
-            } finally {
-                loading.style.display = 'none';
-                submitBtn.disabled = false;
-            }
-        });
-    </script>
 </body>
 </html>
