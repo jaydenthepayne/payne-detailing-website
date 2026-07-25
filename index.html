@@ -32,6 +32,7 @@
   </div>
   <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </header>
+<div class="mobile-nav-scrim" id="mobileNavScrim"></div>
 <div class="mobile-nav" id="mobileNav">
   <a href="index.html">Home</a>
   <a href="about.html">About</a>
@@ -39,6 +40,7 @@
   <a href="products.html">Products</a>
   <a href="events.html">Events</a>
   <a href="contact.html">Contact</a>
+  <a href="#booking" class="btn btn-solid"><span>Book Now</span></a>
 </div>
 
 <!-- GARAGE DOOR ENTRANCE — click-to-enter, your real logo centered on the door -->
@@ -97,31 +99,15 @@
 
 <!-- HERO -->
 <section class="hero">
+  <video class="hero-mobile-video" src="assets/video/rs5_01.mp4" muted loop playsinline preload="metadata" autoplay
+    data-desktop-src="assets/video/rs5_01.mp4" data-mobile-src="assets/video/mobile/mobile_hero_panel.mp4"></video>
   <div class="hero-inner">
     <p class="eyebrow">Welcome to Payne Detailing Group</p>
     <h1 style="margin-top:22px;">Explore Our Work</h1>
     <p>Precision care for extraordinary automobiles. Scroll down to see featured vehicles and services.</p>
-  </div>
-</section>
-
-<!-- PANORAMA 1 -->
-<section class="panorama">
-  <video class="layer pano-video" src="assets/video/rs5_01.mp4" muted loop playsinline preload="metadata"></video>
-  <div class="layer pano-overlay"></div>
-  <div class="panorama-caption">
-    <span class="eyebrow">The Standard</span>
-    <h2>Detailing, Treated as Craft — Not a Commodity</h2>
-    <p>Every vehicle that comes through Payne Detailing Group is assessed, planned, and finished by hand. No shared bays, no rushed turnarounds — just uncompromising attention paid to cars that deserve it.</p>
-  </div>
-</section>
-
-<!-- INTRO STATS -->
-<section class="intro tight">
-  <div class="wrap">
-    <div class="intro-stats">
-      <div class="stat reveal"><b>Exotic&nbsp;&amp;&nbsp;Luxury</b><span>Vehicle Focus</span></div>
-      <div class="stat reveal"><b>Mobile&nbsp;Service</b><span>We Come to You</span></div>
-      <div class="stat reveal"><b>Koch&nbsp;Chemie·P&amp;S</b><span>Professional Chemicals</span></div>
+    <div class="hero-cta">
+      <a href="#booking" class="btn btn-solid"><span>Book Now</span></a>
+      <a href="tel:+15855048629" class="btn"><span>Call Us</span></a>
     </div>
   </div>
 </section>
@@ -178,25 +164,25 @@
   </div>
 </section>
 
+<!-- PANORAMA 1 -->
+<section class="panorama">
+  <video class="layer pano-video" src="assets/video/mercedes_560sl_01.mp4" muted loop playsinline preload="metadata"
+    data-desktop-src="assets/video/mercedes_560sl_01.mp4" data-mobile-src="assets/video/mobile/mobile_panorama_foam.mp4"></video>
+  <div class="layer pano-overlay"></div>
+  <div class="panorama-caption">
+    <span class="eyebrow">The Standard</span>
+    <h2>Detailing, Treated as Craft — Not a Commodity</h2>
+    <p>Every vehicle that comes through Payne Detailing Group is assessed, planned, and finished by hand. No shared bays, no rushed turnarounds — just uncompromising attention paid to cars that deserve it.</p>
+  </div>
+</section>
+
 <!-- EMERGENCY -->
-<section class="emergency">
+<section class="emergency" id="comingSoonTeaser">
   <div class="wrap reveal">
     <span class="badge">Coming Soon · By Invitation</span>
     <h2>The Emergency Detail</h2>
     <p>For owners of exceptionally rare and high-value vehicles, we're developing an on-demand, white-glove detailing service — the same standard of urgency and discretion you'd expect from a private jet detailer, brought to your driveway.</p>
     <div style="margin-top:34px;"><a href="contact.html" class="btn"><span>Request Early Access</span></a></div>
-  </div>
-</section>
-
-<!-- PANORAMA 2 -->
-<section class="panorama">
-  <video class="layer pano-video" src="assets/video/mercedes_560sl_01.mp4" muted loop playsinline preload="metadata"></video>
-  <div class="layer pano-overlay"></div>
-  <div class="panorama-caption">
-    <span class="eyebrow">What We Use</span>
-    <h2>Only Industry-Standard Chemicals</h2>
-    <p>Koch-Chemie, P&amp;S, and other professional-grade product lines — matched to your vehicle's specific paint, leather, and trim.</p>
-    <div style="margin-top:30px;"><a href="products.html" class="btn"><span>See What We Use</span></a></div>
   </div>
 </section>
 
@@ -239,14 +225,32 @@
       <div class="booking-info reveal">
         <p class="eyebrow">Book Now</p>
         <h2>Reserve Your Appointment</h2>
-        <p>Pick a time directly on the calendar below — you'll get an instant confirmation. Prefer to talk first? Visit the Contact page or use the chat assistant in the corner.</p>
+        <p>Select a service to reserve your appointment. Each option has its own dedicated calendar so you can book exactly what your vehicle needs.</p>
       </div>
-      <div class="booking-embed">
-        <div id="cal-inline"></div>
-        <div class="booking-fallback" id="calFallback">
-          <span class="eyebrow">Booking Calendar</span>
-          <p>Connect your Cal.com account to activate live booking here.<br>(See <code>js/main.js</code> comment / ask Claude to wire up your real Cal.com username.)</p>
-          <a href="https://cal.com" target="_blank" rel="noopener" class="btn"><span>Set Up Cal.com</span></a>
+      <div class="booking-tiles">
+        <div class="booking-card reveal">
+          <div class="booking-num">01</div>
+          <h3>Essential Detail</h3>
+          <p>Full interior cleaning, exterior hand wash, wheels & tires, windows, tire dressing.</p>
+          <a href="https://cal.com/paynedetailinggroup1/essential-detail" target="_blank" rel="noopener" class="btn btn-booking"><span>Book Now</span></a>
+        </div>
+        <div class="booking-card reveal">
+          <div class="booking-num">02</div>
+          <h3>Premium Detail</h3>
+          <p>Steam cleaning, carpet & seat shampoo, iron decontamination, paint sealant.</p>
+          <a href="https://cal.com/paynedetailinggroup1/premium-detail" target="_blank" rel="noopener" class="btn btn-booking"><span>Book Now</span></a>
+        </div>
+        <div class="booking-card reveal">
+          <div class="booking-num">03</div>
+          <h3>Signature Detail</h3>
+          <p>Clay bar, paint enhancement polish, swirl reduction, extended protection.</p>
+          <a href="https://cal.com/paynedetailinggroup1/signature-detail" target="_blank" rel="noopener" class="btn btn-booking"><span>Book Now</span></a>
+        </div>
+        <div class="booking-card reveal">
+          <div class="booking-num">04</div>
+          <h3>Consultation Call</h3>
+          <p>30-minute call to discuss your vehicle's detailing needs and available services.</p>
+          <a href="https://cal.com/paynedetailinggroup1" target="_blank" rel="noopener" class="btn btn-booking"><span>Schedule Call</span></a>
         </div>
       </div>
     </div>
@@ -256,7 +260,7 @@
 <!-- INTERACTIVE VIDEO REEL -->
 <section class="reel" id="reel">
   <div class="reel-video-wrap">
-    <video class="reel-video" id="reelVideo" src="assets/video/escalade_02_grille.mp4" muted autoplay playsinline preload="metadata"></video>
+    <video class="reel-video" id="reelVideo" src="assets/video/escalade_02_grille.mp4" muted playsinline preload="none"></video>
   </div>
   <div class="reel-overlay"></div>
   <div class="wrap reel-content">
@@ -348,52 +352,6 @@
 <script src="js/chatbot.js?v=4"></script>
 <script src="js/main.js?v=4"></script>
 
-<!--
-  ===========================================================
-  CAL.COM BOOKING EMBED — activate once Jayden has an account
-  ===========================================================
-  1. Create a free account at https://cal.com and set up an
-     event type (e.g. "Detailing Consultation").
-  2. Replace "your-cal-username" below with the real username.
-  3. Delete the #calFallback <div> above once this is live.
-  This is Cal.com's standard embed loader — verify against the
-  live snippet in your Cal.com dashboard (Settings > Embed) in
-  case the loader script has been updated since this was written.
--->
-<script type="text/javascript">
-  (function (C, A, L) {
-    let p = function (a, ar) { a.q.push(ar); };
-    let d = C.document;
-    C.Cal = C.Cal || function () {
-      let cal = C.Cal; let ar = arguments;
-      if (!cal.loaded) {
-        cal.ns = {}; cal.q = cal.q || [];
-        d.head.appendChild(d.createElement("script")).src = A;
-        cal.loaded = true;
-      }
-      if (ar[0] === L) {
-        const api = function () { p(api, arguments); };
-        const namespace = ar[1];
-        api.q = api.q || [];
-        if (typeof namespace === "string") {
-          cal.ns[namespace] = cal.ns[namespace] || api;
-          p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]);
-        } else p(cal, ar);
-        return;
-      }
-      p(cal, ar);
-    };
-  })(window, "https://app.cal.com/embed/embed.js", "init");
-
-  Cal("init", { origin: "https://cal.com" });
-  Cal("inline", {
-    elementOrSelector: "#cal-inline",
-    calLink: "paynedetailinggroup1",
-    layout: "month_view"
-  });
-  Cal("ui", { theme: "dark", styles: { branding: { brandColor: "#c9a86a" } } });
-  document.getElementById('calFallback')?.remove();
-</script>
 
 </body>
 </html>

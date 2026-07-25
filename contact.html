@@ -32,6 +32,7 @@
   </div>
   <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
 </header>
+<div class="mobile-nav-scrim" id="mobileNavScrim"></div>
 <div class="mobile-nav" id="mobileNav">
   <a href="index.html">Home</a>
   <a href="about.html">About</a>
@@ -39,6 +40,7 @@
   <a href="products.html">Products</a>
   <a href="events.html">Events</a>
   <a href="contact.html">Contact</a>
+  <a href="contact.html#booking" class="btn btn-solid"><span>Book Now</span></a>
 </div>
 
 <section class="page-hero">
@@ -79,11 +81,11 @@
       <p>Need your vehicle detailed urgently? Call us directly for same-day or rush appointments.</p>
     </div>
     <div class="emergency-contact reveal" style="max-width:600px; margin:40px auto 0;">
-      <div style="text-align:center; padding:40px; border:2px solid #c9a86a; border-radius:8px;">
-        <p style="font-size:14px; letter-spacing:2px; color:#666; margin-bottom:16px;">CALL FOR IMMEDIATE AVAILABILITY</p>
-        <a href="tel:+15855048629" style="display:inline-block; font-size:48px; font-weight:600; color:#c9a86a; text-decoration:none; margin-bottom:20px; font-family:'Cormorant Garamond';">+1 (585) 504-8629</a>
-        <p style="color:#666; margin-bottom:24px;">Available for rush bookings during business hours. Text us if calling isn't convenient.</p>
-        <a href="sms:+15855048629" class="btn" style="display:inline-block;"><span>Text Us</span></a>
+      <div class="emergency-box">
+        <p class="label">Call for Immediate Availability</p>
+        <a href="tel:+15855048629" class="emergency-phone">+1 (585) 504-8629</a>
+        <p>Available for rush bookings during business hours. Text us if calling isn't convenient.</p>
+        <a href="sms:+15855048629" class="btn"><span>Text Us</span></a>
       </div>
     </div>
   </div>
@@ -98,13 +100,13 @@
       <p>Have questions before booking? Reach out by phone, email, or social media.</p>
     </div>
     <div class="contact-info reveal" style="max-width:500px; margin:0 auto;">
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:40px; text-align:center;">
+      <div class="contact-details-grid">
         <div class="info-item">
-          <div class="k" style="font-size:12px; letter-spacing:1px; color:#999; margin-bottom:8px;">PHONE</div>
-          <div class="v"><a href="tel:+15855048629" style="font-size:20px; font-weight:600;">+1 (585) 504-8629</a></div>
+          <div class="k">Phone</div>
+          <div class="v"><a href="tel:+15855048629" style="font-size:20px;">+1 (585) 504-8629</a></div>
         </div>
         <div class="info-item">
-          <div class="k" style="font-size:12px; letter-spacing:1px; color:#999; margin-bottom:8px;">EMAIL</div>
+          <div class="k">Email</div>
           <div class="v"><a href="mailto:jayden.payne@paynedetailinggroup.com" style="font-size:14px;">jayden.payne@paynedetailinggroup.com</a></div>
         </div>
       </div>
@@ -203,7 +205,7 @@
   Cal("inline", {
     elementOrSelector: "#cal-inline",
     calLink: "paynedetailinggroup1",
-    layout: "month_view"
+    layout: "week_view"
   });
   Cal("ui", { theme: "light", styles: { branding: { brandColor: "#c9a86a" } } });
   document.getElementById('calFallback')?.remove();

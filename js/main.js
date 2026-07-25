@@ -11,7 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
      The door sits fixed over the whole viewport until the Enter button is
      clicked. On click it lifts (2.4s) and is then hidden/disabled so it
      doesn't block anything underneath. No scroll-linking, no auto-open
-     timer, no localStorage persistence — every fresh page load shows it. */
+     timer, no localStorage persistence — every fresh page load shows it.
+     Skipped entirely on phones: it's a nice desktop flourish, but a visitor
+     scanning a QR code at a car show to book on their phone shouldn't have
+     to tap through an extra screen first. */
   const garageEnter = document.getElementById('garageEnter');
   const garageBtn = document.getElementById('garageBtn');
 
@@ -22,7 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2400); // matches the 2.4s CSS lift transition
   }
 
-  if (garageBtn) {
+  if (garageEnter && window.innerWidth <= 760) {
+    garageEnter.classList.add('closed');
+  } else if (garageBtn) {
     garageBtn.addEventListener('click', (e) => {
       e.preventDefault();
       openGarage();
@@ -39,15 +44,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /* ---- mobile menu ---- */
+  /* ---- mobile menu: top dropdown + scrim ---- */
   const menuToggle = document.getElementById('menuToggle');
   const mobileNav = document.getElementById('mobileNav');
-  if (menuToggle && mobileNav) {
-    menuToggle.addEventListener('click', () => mobileNav.classList.toggle('open'));
-    mobileNav.querySelectorAll('a').forEach(a =>
-      a.addEventListener('click', () => mobileNav.classList.remove('open'))
-    );
+  const mobileNavScrim = document.getElementById('mobileNavScrim');
+  function closeMobileNav() {
+    mobileNav.classList.remove('open');
+    mobileNavScrim.classList.remove('open');
+    menuToggle.classList.remove('open');
   }
+  function toggleMobileNav() {
+    const isOpen = mobileNav.classList.toggle('open');
+    mobileNavScrim.classList.toggle('open', isOpen);
+    menuToggle.classList.toggle('open', isOpen);
+  }
+  if (menuToggle && mobileNav && mobileNavScrim) {
+    menuToggle.addEventListener('click', toggleMobileNav);
+    mobileNavScrim.addEventListener('click', closeMobileNav);
+    mobileNav.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', closeMobileNav)
+    );
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMobileNav();
+    });
+  }
+
+  /* ---- mobile-specific background video ----
+     Swaps in vertically-shot clips (framed for the car, not cropped from a
+     landscape source) on the hero and first panorama band when the viewport
+     is phone-width. Checked once at load — orientation flips mid-session are
+     rare enough not to warrant a resize listener here. */
+  document.querySelectorAll('[data-mobile-src]').forEach((vid) => {
+    const desktopSrc = vid.getAttribute('data-desktop-src') || vid.getAttribute('src');
+    const mobileSrc = vid.getAttribute('data-mobile-src');
+    if (window.innerWidth <= 760 && mobileSrc) {
+      vid.querySelector('source')?.remove();
+      vid.setAttribute('src', mobileSrc);
+    } else if (window.innerWidth > 760 && desktopSrc) {
+      vid.querySelector('source')?.remove();
+      vid.setAttribute('src', desktopSrc);
+    }
+    vid.load();
+  });
 
   /* ---- footer year ---- */
   const yearEl = document.getElementById('year');
@@ -134,9 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
     bgVideos.forEach((vid) => vidObserver.observe(vid));
   }
 
-  /* ---- interactive video reel (homepage "Recent Work") ---- */
+  /* ---- interactive video reel (homepage "Recent Work") ----
+     Hidden on phones (see the mobile CSS breakpoint) to keep the landing
+     page from feeling busy, so skip setting it up there entirely — no point
+     wiring vehicle buttons/dots or fetching its first clip for a section
+     nobody on mobile will ever see. */
   const reel = document.getElementById('reel');
-  if (reel) {
+  if (reel && window.innerWidth > 760) {
     const VEHICLES = [
       { name: 'Cadillac Escalade', clips: [
         { file: 'escalade_02_grille.mp4', title: 'Grille Detail' },
