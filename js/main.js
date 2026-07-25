@@ -11,10 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
      The door sits fixed over the whole viewport until the Enter button is
      clicked. On click it lifts (2.4s) and is then hidden/disabled so it
      doesn't block anything underneath. No scroll-linking, no auto-open
-     timer, no localStorage persistence — every fresh page load shows it.
-     Skipped entirely on phones: it's a nice desktop flourish, but a visitor
-     scanning a QR code at a car show to book on their phone shouldn't have
-     to tap through an extra screen first. */
+     timer, no localStorage persistence — every fresh page load shows it,
+     on every screen size, and stays put until the visitor taps Enter. */
   const garageEnter = document.getElementById('garageEnter');
   const garageBtn = document.getElementById('garageBtn');
 
@@ -25,9 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2400); // matches the 2.4s CSS lift transition
   }
 
-  if (garageEnter && window.innerWidth <= 760) {
-    garageEnter.classList.add('closed');
-  } else if (garageBtn) {
+  if (garageBtn) {
     garageBtn.addEventListener('click', (e) => {
       e.preventDefault();
       openGarage();

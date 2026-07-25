@@ -644,7 +644,14 @@ footer p{ color:var(--muted-2); font-size:12px; margin-top:18px; }
     content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
     background:linear-gradient(180deg, rgba(14,11,8,0.62) 0%, rgba(14,11,8,0.5) 45%, rgba(14,11,8,0.72) 100%);
   }
-  .hero-inner{ padding:0 24px; }
+  /* Desktop's opaque hero-inner card (rgba(14,11,8,0.92), 450px box) would
+     blot out almost the whole vertical clip on a phone-width screen — drop
+     it here and lean on the .hero::after gradient scrim + text-shadow above
+     for legibility instead, so the footage actually reads behind the type. */
+  .hero-inner{
+    max-width:none; width:100%; padding:0 24px; margin:0;
+    background:none; border-radius:0; box-shadow:none;
+  }
   .hero .eyebrow{ color:#f0d9a3; text-shadow:0 1px 12px rgba(0,0,0,0.5); }
   .hero h1{ color:#fff; text-shadow:0 2px 20px rgba(0,0,0,0.55); }
   .hero p{ color:rgba(255,255,255,0.9); text-shadow:0 1px 10px rgba(0,0,0,0.4); }
