@@ -696,12 +696,38 @@ footer p{ color:var(--muted-2); font-size:12px; margin-top:18px; }
   /* Landing page, kept lean on phones: the video reel (busy multi-control
      portfolio browser), the second product-callout panorama, and the
      "coming soon" emergency teaser all get cut so a phone visitor lands on
-     Hero -> quick hook video -> stats -> top 3 packages -> process ->
+     Hero -> quick hook video -> stats -> packages -> process ->
      booking -> footer, instead of a long scroll of marketing extras. */
   .reel, .panorama-secondary, #comingSoonTeaser{ display:none; }
-  /* Services teaser: only the 3 core packages on mobile, plus the existing
-     "View Full Menu" button for anyone who wants the other two + add-ons. */
-  #services-teaser .bento-card:nth-child(n+4){ display:none; }
+  /* Services teaser: all 5 bookable packages show on mobile too (Essential
+     through Exterior are each a direct cal.com booking link now, not just
+     info cards — hiding Interior/Exterior here would hide two working
+     booking buttons from every phone visitor). Only Add-Ons, which isn't a
+     booking link, stays hidden — same as desktop's "view full menu" path. */
+  #services-teaser .bento-card:nth-child(6){ display:none; }
+  /* Tighter card padding/type on mobile so 5 stacked cards scan faster —
+     same content, less dead space between them. */
+  #services-teaser .bento-card{ padding:26px 22px; }
+  #services-teaser .bento-card h3{ font-size:20px; margin-top:10px; }
+  #services-teaser .bento-card p{ margin-top:8px; }
+  #services-teaser .bento-price{ margin-top:14px; }
+  #services-teaser .bento-cta{ margin-top:10px; }
+  .bento{ gap:12px; margin-top:44px; }
+
+  /* Footer link/social tap targets: text alone is a thin target for a
+     thumb — pad each one into a real tappable area instead of just the
+     glyph width. */
+  .foot-links a, .social-links a{ padding:8px 4px; display:inline-block; }
+  .foot-links{ gap:8px 22px; }
+  .social-links{ gap:8px 16px; }
+}
+
+/* Larger phones (Pro Max / most Android flagships: ~414-430pt wide, taller
+   viewport) — the hero's 640px cap leaves a bigger plain gap before
+   Services than on a standard-size phone, since the video has more room to
+   grow but stops early. Let it use more of that extra height. */
+@media (max-width:760px) and (min-width:414px) and (min-height:800px){
+  .hero{ max-height:760px; }
 }
 
 /* ---- phones: tighter type + spacing so nothing feels cramped, down to
