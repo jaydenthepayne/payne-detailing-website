@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="assets/favicon.png">
-<link rel="stylesheet" href="css/style.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 
@@ -122,21 +122,24 @@
       <p>A preview of what we offer — head to the full Services page for the complete menu and pricing.</p>
     </div>
     <div class="bento">
-      <a href="https://cal.com/paynedetailinggroup1/essential-detail" target="_blank" rel="noopener" class="bento-card wide glass reveal bento-book">
+      <a href="https://cal.com/paynedetailinggroup1/essential-detail" target="_blank" rel="noopener" class="bento-card wide glass reveal bento-book"
+        data-cal-link="paynedetailinggroup1/essential-detail">
         <div class="bento-num">01</div>
         <h3>Essential Detail</h3>
         <p>Full interior cleaning, exterior hand wash, wheels &amp; tires, windows, tire dressing.</p>
         <div class="bento-price">Starting at $199</div>
         <div class="bento-cta">Book Now &rarr;</div>
       </a>
-      <a href="https://cal.com/paynedetailinggroup1/premium-detail" target="_blank" rel="noopener" class="bento-card wide glass reveal bento-book" style="border-color:var(--gold);">
+      <a href="https://cal.com/paynedetailinggroup1/premium-detail" target="_blank" rel="noopener" class="bento-card wide glass reveal bento-book" style="border-color:var(--gold);"
+        data-cal-link="paynedetailinggroup1/premium-detail">
         <div class="bento-num">02 &nbsp;·&nbsp; <span style="color:var(--gold-bright);">Most Popular</span></div>
         <h3>Premium Detail</h3>
         <p>Everything in Essential, plus steam cleaning, carpet &amp; seat shampoo, iron decontamination, paint sealant.</p>
         <div class="bento-price">Starting at $349</div>
         <div class="bento-cta">Book Now &rarr;</div>
       </a>
-      <a href="https://cal.com/paynedetailinggroup1/signature-detail" target="_blank" rel="noopener" class="bento-card glass reveal bento-book">
+      <a href="https://cal.com/paynedetailinggroup1/signature-detail" target="_blank" rel="noopener" class="bento-card glass reveal bento-book"
+        data-cal-link="paynedetailinggroup1/signature-detail">
         <div class="bento-num">03</div>
         <h3>Signature Detail</h3>
         <p>Everything in Premium, plus clay bar, paint enhancement polish, swirl reduction, extended protection.</p>
@@ -315,9 +318,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="js/three-scene.js"></script>
-<script src="js/chatbot.js?v=5"></script>
-<script src="js/main.js?v=5"></script>
+<!-- BOOKING MODAL — powers the click-triggered booking overlay on the
+     Essential/Premium/Signature cards above (data-cal-link attributes).
+     Each card also keeps its plain href to the cal.com page as a fallback,
+     so if JS fails to load, the cards still work exactly as before (just
+     navigate away instead of opening the overlay). To roll this back
+     entirely, delete this block and the matching JS in main.js — nothing
+     else changes.
+     Cal.com's own hosted "Embed" dashboard flow (auto-binding click
+     listeners via a data-cal-link script) turned out to be unreliable to
+     wire up — clicks fell through to normal navigation instead of opening
+     their modal. Their booking pages are still built to be iframed (that's
+     what their own embed product does under the hood), so this loads the
+     same page directly in our own iframe instead of depending on their
+     script's click interception. -->
+<div id="bookingModal" class="booking-modal" aria-hidden="true">
+  <div class="booking-modal-backdrop" data-booking-close></div>
+  <div class="booking-modal-panel">
+    <button class="booking-modal-close" type="button" aria-label="Close booking" data-booking-close>&times;</button>
+    <iframe id="bookingModalFrame" title="Book an appointment" loading="eager"></iframe>
+  </div>
+</div>
 
+<script src="js/chatbot.js?v=6"></script>
+<script src="js/main.js?v=6"></script>
 
 </body>
 </html>

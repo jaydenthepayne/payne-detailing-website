@@ -76,6 +76,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---- booking modal (cal.com in an iframe) ----
+     Opens the Essential/Premium/Signature cards' cal.com link inside an
+     overlay instead of navigating away. See the HTML comment above
+     #bookingModal for why this doesn't use cal.com's own embed script. */
+  const bookingModal = document.getElementById('bookingModal');
+  const bookingFrame = document.getElementById('bookingModalFrame');
+  if (bookingModal && bookingFrame) {
+    function openBookingModal(calLink) {
+      bookingFrame.src = 'https://cal.com/' + calLink + '?embed=true&layout=month_view';
+      bookingModal.classList.add('open');
+      bookingModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeBookingModal() {
+      bookingModal.classList.remove('open');
+      bookingModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      bookingFrame.src = ''; // stop loading / free the iframe once hidden
+    }
+    document.querySelectorAll('[data-cal-link]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        openBookingModal(el.getAttribute('data-cal-link'));
+      });
+    });
+    bookingModal.querySelectorAll('[data-booking-close]').forEach((el) =>
+      el.addEventListener('click', closeBookingModal)
+    );
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && bookingModal.classList.contains('open')) closeBookingModal();
+    });
+  }
+
   /* ---- mobile-specific background video ----
      Swaps in vertically-shot clips (framed for the car, not cropped from a
      landscape source) on the hero and first panorama band when the viewport
