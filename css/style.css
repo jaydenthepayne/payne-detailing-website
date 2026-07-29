@@ -385,9 +385,10 @@ nav a.active{ color:var(--gold); }
   position:absolute; inset:0; background:rgba(14,11,8,0.72); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
 }
 .booking-modal-panel{
-  position:relative; z-index:1; width:min(760px, 92vw); height:min(820px, 90vh);
+  position:relative; z-index:1; width:min(1180px, 94vw); height:min(840px, 88vh);
   background:var(--panel); border-radius:8px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,0.4);
   transform:translateY(16px) scale(0.98); transition:transform .35s var(--ease);
+  overscroll-behavior:contain;
 }
 .booking-modal.open .booking-modal-panel{ transform:translateY(0) scale(1); }
 .booking-modal-close{

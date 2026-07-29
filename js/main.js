@@ -83,16 +83,33 @@ document.addEventListener('DOMContentLoaded', () => {
   const bookingModal = document.getElementById('bookingModal');
   const bookingFrame = document.getElementById('bookingModalFrame');
   if (bookingModal && bookingFrame) {
+    /* overflow:hidden alone still lets some browsers/trackpads "rubber-band"
+       scroll the body once the cal.com iframe's own scroll runs out of
+       room, which is exactly the back-and-forth bounce reported — the
+       wheel event chains from the iframe's document out to ours. Locking
+       the body's position instead of just hiding overflow makes the page
+       truly unable to move no matter where that scroll-chaining lands. */
+    let lockedScrollY = 0;
     function openBookingModal(calLink) {
       bookingFrame.src = 'https://cal.com/' + calLink + '?embed=true&layout=month_view';
       bookingModal.classList.add('open');
       bookingModal.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
+      lockedScrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = '-' + lockedScrollY + 'px';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
     }
     function closeBookingModal() {
       bookingModal.classList.remove('open');
       bookingModal.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, lockedScrollY);
       bookingFrame.src = ''; // stop loading / free the iframe once hidden
     }
     document.querySelectorAll('[data-cal-link]').forEach((el) => {
